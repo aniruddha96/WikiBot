@@ -2,7 +2,7 @@ from flask import Flask, request
 from flask_cors import CORS
 import requests
 from ChitChatHandler import ChitChatHandler
-
+import urllib.parse as urllib3
 app = Flask(__name__)
 CORS(app)
 
@@ -16,23 +16,23 @@ def search():
     searchTechnology = args.get("technology", default=False, type=bool)
     searchHealthcare = args.get("healthcare", default=False, type=bool)
     searchEducation = args.get("education", default=False, type=bool)
+    searchAll = args.get("all", default=False, type=bool)
 
     finalResponse = 'chatbot goes brrrrrrrrrrrrr'
     if(isChitChat(query)):
         chitChatResponse = getChitChatResponse(query)
         if chitChatResponse == None:
-            response = getResponse(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation)
+            response = getResponse(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll)
             if response != None:
                 finalResponse = response
         else:
             finalResponse = chitChatResponse
     else:
-        response = getResponse(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation)
+        response = getResponse(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll)
         if response != None:
             finalResponse = response
 
     return finalResponse
-
 
 def isChitChat(query):
     return False
@@ -40,11 +40,35 @@ def isChitChat(query):
 def getChitChatResponse(query):
     return 'Dummy response'
 
-def getResponse(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation):
-    print('Searching '+ query +' on '+core+' core')
-    print(searchPolitics)
-    return 'Solr response'
+def fq_formation(flag,type,filter_query):
+    if flag and filter_query == '':
+        filter_query += 'topic:' + type
+    elif flag and filter_query != '':
+        filter_query += ' OR topic:' + type
+    return filter_query
 
+def query_formation(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll):
+    if searchAll:
+        q_link = f'http://34.125.52.100:8983/solr/{core}/select?defType=edismax&df=parent_body&facet.field=topic&facet=true&indent=true&q.op=OR&q={query}'
+    else:
+        filter_query = ''
+        filter_query = fq_formation(searchPolitics,'Politics',filter_query)
+        filter_query = fq_formation(searchEnvironment,'Environment',filter_query)
+        filter_query = fq_formation(searchTechnology,'Technology',filter_query)
+        filter_query = fq_formation(searchHealthcare,'Healthcare',filter_query)
+        filter_query = fq_formation(searchEducation,'Education',filter_query)
+        query = urllib3.quote(query)
+        filter_query = urllib3.quote(filter_query)
+
+        q_link = f'http://34.125.52.100:8983/solr/{core}/select?defType=edismax&df=parent_body&facet.field=topic&facet=true&fq={filter_query}&indent=true&q.op=OR&q={query}'
+    return q_link
+    
+def getResponse(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll):
+    print('Searching '+ query +' on '+core+' core')
+    
+    q_link = query_formation(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll)
+    print(q_link)
+    return 'Solr response'
 
 if __name__ == "__main__":
     cc = ChitChatHandler()

@@ -1,5 +1,7 @@
 // in ActionProvider.jsx
 import React from 'react';
+import { useSelector } from 'react-redux'
+import { getChatbotResponse } from '../services/botAPI'
 
 const ActionProvider = ({ createChatBotMessage, setState, children }) => {
   const handleHello = () => {
@@ -12,10 +14,24 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
 
   };
 
+  const selectedTopics = useSelector((state) => state.topics.selectedTopics)
+
   const handleInput = async (query) => {
-    const res = await fetch('http://127.0.0.1:9999/getresponse?query='+query+'&politics=true&environment=true&technology=true&healthcare=true&education=true&core=default')
-      .then((response) => {return response.text()});
-    console.log(res)
+
+    let topics = {
+      politics: false,
+      technology: false,
+      education: false,
+      environment: false,
+      healthcare: false,
+      all: false,
+    }
+    for (var selectedTopic of selectedTopics) {
+      console.log(selectedTopic);
+      topics[selectedTopic] = true
+    }
+    const res = await getChatbotResponse(query, topics)
+                  .then((response) => {return response.data})
     const botMessage = createChatBotMessage(res);
 
     setState((prev) => ({
@@ -27,14 +43,16 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
   // Put the handleHello function in the actions object to pass to the MessageParser
   return (
     <div>
-      {React.Children.map(children, (child) => {
+    {
+      React.Children.map(children, (child) => {
         return React.cloneElement(child, {
           actions: {
             handleHello,
             handleInput,
           },
         });
-      })}
+      })
+    }
     </div>
   );
 };

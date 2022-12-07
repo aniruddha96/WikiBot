@@ -2,6 +2,14 @@
   text-align: center;
 }
 
+.react-chatbot-kit-chat-container {
+  width: 450px !important;
+}
+
+.react-chatbot-kit-chat-bot-message {
+  margin-left: unset;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

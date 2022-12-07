@@ -3,6 +3,7 @@ from flask_cors import CORS
 import requests
 from ChitChatHandler import ChitChatHandler
 from RedditDataHandler import RedditDataHandler
+from RasaHandler import RasaHandler
 import urllib.parse as urllib3
 app = Flask(__name__)
 CORS(app)
@@ -20,6 +21,10 @@ def search():
     searchAll = args.get("all", default=0, type=int)
 
     finalResponse = 'chatbot goes brrrrrrrrrrrrr'
+    rasaResponse = rasa.getRasaResponse(query)
+    if  rasaResponse!= None:
+        return rasaResponse
+
     if(cc.isChitChat(query)):
         chitChatResponse = cc.getChitChatResponse(query)
         if chitChatResponse == None:
@@ -68,4 +73,5 @@ def getResponse(query,core,searchPolitics,searchEnvironment,searchTechnology,sea
 if __name__ == "__main__":
     cc = ChitChatHandler()
     reddit = RedditDataHandler()
+    rasa = RasaHandler()
     app.run(host="0.0.0.0", port=9999)

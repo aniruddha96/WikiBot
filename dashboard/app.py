@@ -39,10 +39,21 @@ def matchesToDF(matches):
     df = pd.DataFrame.from_records([s.to_dict(1,1) for s in matches])
     return df
 
+def matchToDF(match):
+    df = pd.DataFrame(match.responses, columns =['Response', 'Upvotes'])
+    return df
+
 def renderBarGraph(res,query):
     l = redd.getMatchesList(res,query)
     df = matchesToDF(l.values())
     fig = px.bar(df, x="id", y=["weighted solr score", "weighted emb score"], title="Scoring matches",hover_data=['string'])
+    st.plotly_chart(fig, use_container_width=True)
+
+def renderResponsesBarGraph(res,query):
+    topResponse=  redd.nlpFilter(res,query)
+    df = matchToDF(topResponse)
+    print(df)
+    fig = px.bar(df,x = "Response", y=["Upvotes"], title="Response and Upvotes ",hover_data=['Response'])
     st.plotly_chart(fig, use_container_width=True)
 
 def render():
@@ -52,8 +63,7 @@ def render():
     expander.write(j)
     renderTotalResPieChart(j)
     renderBarGraph(resultJson,query)
-
-    matches = redd.getMatchesList(resultJson,query)
+    renderResponsesBarGraph(resultJson,query)
     
     
 if st.sidebar.button('Submit'):

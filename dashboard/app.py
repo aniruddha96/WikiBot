@@ -14,8 +14,8 @@ Healthcare = st.sidebar.checkbox('Healthcare')
 Education = st.sidebar.checkbox('Education',disabled=False)
 All = st.sidebar.checkbox('All')
 
-alpha = st.sidebar.number_input('Alpha')
-beta = st.sidebar.number_input('beta')
+alpha = st.sidebar.number_input('Alpha : weighing factor for solr score',value=1.0)
+beta = st.sidebar.number_input('Beta : weighing factor for BERT embedding cosine score',value=1.1)
 
 
 redd = RedditDataHandler()
@@ -36,7 +36,7 @@ def renderTotalResPieChart(j):
     st.plotly_chart(fig, use_container_width=True)
 
 def matchesToDF(matches):
-    df = pd.DataFrame.from_records([s.to_dict(1,1) for s in matches])
+    df = pd.DataFrame.from_records([s.to_dict(alpha,beta) for s in matches])
     return df
 
 def matchToDF(match):
@@ -49,22 +49,30 @@ def renderBarGraph(res,query):
     fig = px.bar(df, x="id", y=["weighted solr score", "weighted emb score"], title="Scoring matches",hover_data=['string'])
     st.plotly_chart(fig, use_container_width=True)
 
+
 def renderResponsesBarGraph(res,query):
     topResponse=  redd.nlpFilter(res,query)
+    st.write("Top matched string is : "+topResponse.text)
     df = matchToDF(topResponse)
-    print(df)
+
     fig = px.bar(df,x = "Response", y=["Upvotes"], title="Response and Upvotes ",hover_data=['Response'])
     st.plotly_chart(fig, use_container_width=True)
 
+    st.write('Final response by selecting the most upvoted response to top matched string')
+    st.write(redd.getMostUpVotedResponse(topResponse))
+
+
 def render():
     expander = st.expander("Expand to see raw solr response")
-    resultJson = redd.getResponse(query,'reddit',True,True,True,True,True,1)
+    resultJson = redd.getResponse(query,'reddit',Politics,Environment,Technology,Healthcare,Education,All)
     j = resultJson.json()
+    if j['response']['numFound'] == 0:
+        st.write('No results found')
+        return
     expander.write(j)
     renderTotalResPieChart(j)
     renderBarGraph(resultJson,query)
     renderResponsesBarGraph(resultJson,query)
-    
     
 if st.sidebar.button('Submit'):
     render()

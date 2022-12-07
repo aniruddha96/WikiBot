@@ -17,7 +17,7 @@ def search():
     searchTechnology = args.get("technology", default=0, type=int)
     searchHealthcare = args.get("healthcare", default=0, type=int)
     searchEducation = args.get("education", default=0, type=int)
-	searchAll = args.get("all", default=0, type=int)
+    searchAll = args.get("all", default=0, type=int)
 
     finalResponse = 'chatbot goes brrrrrrrrrrrrr'
     if(cc.isChitChat(query)):

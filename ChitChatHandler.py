@@ -55,4 +55,4 @@ class ChitChatHandler:
         return False
 
     def getChitChatResponse(self,query):
-        return 'Dummy response'
+        return self.searchFromSolr(query)

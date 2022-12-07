@@ -21,7 +21,7 @@ def search():
 
     finalResponse = 'chatbot goes brrrrrrrrrrrrr'
     if(cc.isChitChat(query)):
-        chitChatResponse = getChitChatResponse(query)
+        chitChatResponse = cc.getChitChatResponse(query)
         if chitChatResponse == None:
             response = getResponse(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll)
             if response != None:
@@ -34,12 +34,6 @@ def search():
             finalResponse = response
 
     return finalResponse
-
-def isChitChat(query):
-    return False
-
-def getChitChatResponse(query):
-    return 'Dummy response'
 
 def fq_formation(flag,type,filter_query):
     if flag and filter_query == '':

@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask_cors import CORS
 import requests
 from ChitChatHandler import ChitChatHandler
+from RedditDataHandler import RedditDataHandler
 import urllib.parse as urllib3
 app = Flask(__name__)
 CORS(app)
@@ -10,7 +11,7 @@ CORS(app)
 def search():
     args = request.args
     query = args.get("query", default="", type=str)
-    core = args.get("core", default="default", type=str)
+    core = args.get("core", default="reddit", type=str)
     searchPolitics = args.get("politics", default=False, type=bool)
     searchEnvironment = args.get("environment", default=False, type=bool)
     searchTechnology = args.get("technology", default=False, type=bool)
@@ -19,7 +20,7 @@ def search():
     searchAll = args.get("all", default=False, type=bool)
 
     finalResponse = 'chatbot goes brrrrrrrrrrrrr'
-    if(isChitChat(query)):
+    if(cc.isChitChat(query)):
         chitChatResponse = getChitChatResponse(query)
         if chitChatResponse == None:
             response = getResponse(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll)
@@ -28,7 +29,7 @@ def search():
         else:
             finalResponse = chitChatResponse
     else:
-        response = getResponse(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll)
+        response = reddit.getResponse(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll)
         if response != None:
             finalResponse = response
 
@@ -72,4 +73,5 @@ def getResponse(query,core,searchPolitics,searchEnvironment,searchTechnology,sea
 
 if __name__ == "__main__":
     cc = ChitChatHandler()
+    reddit = RedditDataHandler()
     app.run(host="0.0.0.0", port=9999)

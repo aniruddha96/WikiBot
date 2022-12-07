@@ -21,9 +21,9 @@ def search():
     searchAll = args.get("all", default=0, type=int)
 
     finalResponse = 'chatbot goes brrrrrrrrrrrrr'
-    rasaResponse = rasa.getRasaResponse(query)
-    if  rasaResponse!= None:
-        return rasaResponse
+    #rasaResponse = rasa.getRasaResponse(query)
+    #if  rasaResponse!= None:
+    #    return rasaResponse
 
     if(cc.isChitChat(query)):
         chitChatResponse = cc.getChitChatResponse(query)

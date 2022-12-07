@@ -13,7 +13,7 @@ class ChitChatHandler:
         self.model=model = SentenceTransformer('all-MiniLM-L6-v2')
 
         json_file = open('model_new.json', 'r')
-        self.loaded_model_json = json_file.read()
+        loaded_model_json = json_file.read()
         json_file.close()
 
         self.loaded_model = model_from_json(loaded_model_json, custom_objects={'KerasLayer':hub.KerasLayer})

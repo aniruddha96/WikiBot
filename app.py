@@ -11,13 +11,13 @@ CORS(app)
 def search():
     args = request.args
     query = args.get("query", default="", type=str)
-    core = args.get("core", default="reddit", type=str)
-    searchPolitics = args.get("politics", default=False, type=bool)
-    searchEnvironment = args.get("environment", default=False, type=bool)
-    searchTechnology = args.get("technology", default=False, type=bool)
-    searchHealthcare = args.get("healthcare", default=False, type=bool)
-    searchEducation = args.get("education", default=False, type=bool)
-    searchAll = args.get("all", default=False, type=bool)
+    core = args.get("core", default="default", type=str)
+    searchPolitics = args.get("politics", default=0, type=int)
+    searchEnvironment = args.get("environment", default=0, type=int)
+    searchTechnology = args.get("technology", default=0, type=int)
+    searchHealthcare = args.get("healthcare", default=0, type=int)
+    searchEducation = args.get("education", default=0, type=int)
+	searchAll = args.get("all", default=0, type=int)
 
     finalResponse = 'chatbot goes brrrrrrrrrrrrr'
     if(cc.isChitChat(query)):

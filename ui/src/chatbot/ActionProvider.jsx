@@ -19,16 +19,15 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
   const handleInput = async (query) => {
 
     let topics = {
-      politics: false,
-      technology: false,
-      education: false,
-      environment: false,
-      healthcare: false,
-      all: false,
+      politics: 0,
+      technology: 0,
+      education: 0,
+      environment: 0,
+      healthcare: 0,
+      all: 0,
     }
     for (var selectedTopic of selectedTopics) {
-      console.log(selectedTopic);
-      topics[selectedTopic] = true
+      topics[selectedTopic] = 1
     }
     const res = await getChatbotResponse(query, topics)
                   .then((response) => {return response.data})

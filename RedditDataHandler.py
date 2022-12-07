@@ -47,7 +47,7 @@ class RedditDataHandler:
             query = urllib3.quote(query)
             filter_query = urllib3.quote(filter_query)
 
-            q_link = f'http://34.125.52.100:8983/solr/{core}/select?defType=edismax&df=parent_body&facet.field=topic&facet=true&fq={filter_query}&indent=true&q.op=OR&q={query}'
+            q_link = f'http://34.125.52.100:8983/solr/{core}/select?defType=edismax&df=parent_body&facet.field=topic&facet=true&fl=*%2Cscore&fq={filter_query}&indent=true&q.op=OR&q={query}'
         return q_link
         
     def getResponse(self,query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll):

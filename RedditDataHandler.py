@@ -58,7 +58,7 @@ class RedditDataHandler:
         print(q_link)
         topResult = self.nlpFilter(result,query)
         
-        return topResult.text
+        return self.getMostUpVotedResponse(topResult)
     
     def getMostUpVotedResponse(self,match):
         res = None
@@ -103,7 +103,7 @@ class RedditDataHandler:
             return mat[0]
         
         
-        return getBestMatchResponse(1,3)
+        return getBestMatchResponse(1,1)
     
     
     def getMatchesList(self,result,query):

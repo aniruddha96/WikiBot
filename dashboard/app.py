@@ -18,14 +18,6 @@ alpha = st.sidebar.number_input('Alpha')
 beta = st.sidebar.number_input('beta')
 
 
- 
-# Random Data
-random_x = [100, 2000, 550]
-names = ['A', 'B', 'C']
- 
-fig2 = px.pie(values=random_x, names=names)
-
-
 redd = RedditDataHandler()
 
 def renderTotalResPieChart(j):
@@ -38,8 +30,9 @@ def renderTotalResPieChart(j):
             topic=False
         else:
             counts.append(i)
-
-    fig = px.pie(values=counts, names=topics)
+            topic=True
+    print(topics)
+    fig = px.pie(values=counts, names=topics,title='Distribution of matches by topic')
     st.plotly_chart(fig, use_container_width=True)
 
 def matchesToDF(matches):
@@ -53,8 +46,8 @@ def renderBarGraph(res,query):
     st.plotly_chart(fig, use_container_width=True)
 
 def render():
-    expander = st.expander("Solr Result")
-    resultJson = redd.getResponse(query,'reddit',True,True,True,True,True,True)
+    expander = st.expander("Expand to see raw solr response")
+    resultJson = redd.getResponse(query,'reddit',True,True,True,True,True,1)
     j = resultJson.json()
     expander.write(j)
     renderTotalResPieChart(j)

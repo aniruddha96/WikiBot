@@ -55,10 +55,11 @@ class RedditDataHandler:
         
         q_link = self.query_formation(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll)
         result = requests.get(q_link)
-        print(q_link)
-        topResult = self.nlpFilter(result,query)
-        
         return result
+        #print(q_link)
+        #topResult = self.nlpFilter(result,query)
+        
+       # return self.getMostUpVotedResponse(topResult)
     
     def getMostUpVotedResponse(self,match):
         res = None
@@ -103,7 +104,7 @@ class RedditDataHandler:
             return mat[0]
         
         
-        return getBestMatchResponse(1,3)
+        return getBestMatchResponse(1,1)
     
     
     def getMatchesList(self,result,query):

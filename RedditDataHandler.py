@@ -55,6 +55,9 @@ class RedditDataHandler:
         
         q_link = self.query_formation(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll)
         result = requests.get(q_link)
+        j = result.json()
+        if j['response']['numFound'] == 0:
+            return None
         print(q_link)
 
         res_json = result.json()

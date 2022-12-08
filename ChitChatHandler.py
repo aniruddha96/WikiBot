@@ -39,10 +39,10 @@ class ChitChatHandler:
                 matchedBest = inp
                 response = doc['response']
 
-        print('query : '+query)
+        #print('query : '+query)
         # print('Just Solr match : '+ result.json()['response']['docs'][0]['input'])
-        print('Embedding match : '+ matchedBest)
-        print('Response : '+response)
+        #print('Embedding match : '+ matchedBest)
+        #print('Response : '+response)
         return response
 
     def selectTop(self,result):

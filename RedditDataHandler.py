@@ -79,7 +79,7 @@ class RedditDataHandler:
     def nlpFilter(self,result,query):
         qembeddings = self.model.encode(query, convert_to_tensor=True)
         res = {}
-        for doc in result.json()['response']['docs']:
+        for doc in result['response']['docs']:
             inp = doc['parent_body']
             inpemb= self.model.encode(inp, convert_to_tensor=True)
             cosine_score = util.cos_sim(inpemb, qembeddings)

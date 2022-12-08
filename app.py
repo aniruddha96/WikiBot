@@ -48,8 +48,9 @@ def fq_formation(flag,type,filter_query):
     return filter_query
 
 def query_formation(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll):
+    query = urllib3.quote(query)
     if searchAll:
-        q_link = f'http://34.125.52.100:8983/solr/{core}/select?defType=edismax&df=parent_body&facet.field=topic&facet=true&fl=*%2Cscore&indent=true&q.op=OR&q={query}'
+        q_link = f'http://34.125.52.100:8983/solr/{core}/select?defType=edismax&df=parent_body&facet.field=topic&facet=true&fl=*%2Cscore&indent=true&q.op=OR&q={query}&rows=20&start=0'
     else:
         filter_query = ''
         filter_query = fq_formation(searchPolitics,'Politics',filter_query)
@@ -57,10 +58,9 @@ def query_formation(query,core,searchPolitics,searchEnvironment,searchTechnology
         filter_query = fq_formation(searchTechnology,'Technology',filter_query)
         filter_query = fq_formation(searchHealthcare,'Healthcare',filter_query)
         filter_query = fq_formation(searchEducation,'Education',filter_query)
-        query = urllib3.quote(query)
         filter_query = urllib3.quote(filter_query)
 
-        q_link = f'http://34.125.52.100:8983/solr/{core}/select?defType=edismax&df=parent_body&facet.field=topic&facet=true&fl=*%2Cscore&fq={filter_query}&indent=true&q.op=OR&q={query}'
+        q_link = f'http://34.125.52.100:8983/solr/{core}/select?defType=edismax&df=parent_body&facet.field=topic&facet=true&fl=*%2Cscore&fq={filter_query}&indent=true&q.op=OR&q={query}&rows=20&start=0'
     return q_link
     
 def getResponse(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll):

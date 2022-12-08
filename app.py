@@ -20,7 +20,7 @@ def search():
     searchEducation = args.get("education", default=0, type=int)
     searchAll = args.get("all", default=0, type=int)
 
-    finalResponse = 'chatbot goes brrrrrrrrrrrrr'
+    finalResponse = 'Sorry, I do not have an answer to this question.'
     #rasaResponse = rasa.getRasaResponse(query)
     #if  rasaResponse!= None:
     #    return rasaResponse
@@ -28,7 +28,7 @@ def search():
     if(cc.isChitChat(query)):
         chitChatResponse = cc.getChitChatResponse(query)
         if chitChatResponse == None:
-            response = getResponse(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll)
+            response = reddit.getResponse(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll)
             if response != None:
                 finalResponse = response
         else:
@@ -37,38 +37,7 @@ def search():
         response = reddit.getResponse(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll)
         if response != None:
             finalResponse = response
-
     return finalResponse
-
-def fq_formation(flag,type,filter_query):
-    if flag and filter_query == '':
-        filter_query += 'topic:' + type
-    elif flag and filter_query != '':
-        filter_query += ' OR topic:' + type
-    return filter_query
-
-def query_formation(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll):
-    query = urllib3.quote(query)
-    if searchAll:
-        q_link = f'http://34.125.52.100:8983/solr/{core}/select?defType=edismax&df=parent_body&facet.field=topic&facet=true&fl=*%2Cscore&indent=true&q.op=OR&q={query}&rows=20&start=0'
-    else:
-        filter_query = ''
-        filter_query = fq_formation(searchPolitics,'Politics',filter_query)
-        filter_query = fq_formation(searchEnvironment,'Environment',filter_query)
-        filter_query = fq_formation(searchTechnology,'Technology',filter_query)
-        filter_query = fq_formation(searchHealthcare,'Healthcare',filter_query)
-        filter_query = fq_formation(searchEducation,'Education',filter_query)
-        filter_query = urllib3.quote(filter_query)
-
-        q_link = f'http://34.125.52.100:8983/solr/{core}/select?defType=edismax&df=parent_body&facet.field=topic&facet=true&fl=*%2Cscore&fq={filter_query}&indent=true&q.op=OR&q={query}&rows=20&start=0'
-    return q_link
-    
-def getResponse(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll):
-    print('Searching '+ query +' on '+core+' core')
-    
-    q_link = query_formation(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll)
-    print(q_link)
-    return 'Solr response'
 
 if __name__ == "__main__":
     cc = ChitChatHandler()

@@ -9,10 +9,10 @@ class Matches:
         self.solrScore=0
         self.embScore=0
         self.id=None
-       
+
     def __repr__(self):
         return str(self.text)+'  '+str(self.solrScore)+'  '+str(self.embScore)
-    
+
     def to_dict(self,alpha,beta):
         return {
             'id':self.id,
@@ -92,7 +92,7 @@ class RedditDataHandler:
         
         def getBestMatchResponse(alpha,beta):
             alpha = 1
-            beta = 2
+            beta = 1.2
 
             def comparator(a):
                 return alpha*a.solrScore + beta*a.embScore

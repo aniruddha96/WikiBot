@@ -7,22 +7,24 @@ import MessageParser from "./chatbot/MessageParser";
 import ActionProvider from "./chatbot/ActionProvider";
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import background from "./gradient.png"
 import "./App.css"
 
 function App() {
-
-    const myStyle={
-      backgroundImage: `url(${background})`,
-      height:'100vh',
-      // marginTop:'-70px',
-      // fontSize:'50px',
-      backgroundSize: 'cover',
-      backgroundRepeat: 'no-repeat',
-    };
-    return (
-      <div style={myStyle}>
-        <div className="App">
+  const myStyle={
+    backgroundImage: `url(${background})`,
+    height:'100%',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+  };
+  const routeChange = () =>{
+    window.location.href = `http://34.125.34.68:8501/`
+  }
+  return (
+    <div style={myStyle}>
+      <div className="App">
+        <Grid direction="column" alignItems="center">
           <Grid container direction="row" alignItems="center" height="100vh" justifyContent="center">
             <Chatbot
               config={config}
@@ -30,11 +32,13 @@ function App() {
               actionProvider={ActionProvider}
             />
             <Topics/>
+            <Button size="large" variant="contained" onClick={routeChange}>Take me to debug visualisation.</Button>
           </Grid>
-        </div>
+
+        </Grid>
       </div>
-    );
-  
+    </div>
+  );
 }
 
 export default App;

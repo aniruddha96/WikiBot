@@ -1,3 +1,4 @@
+
 import requests
 import json
 from datetime import datetime
@@ -9,7 +10,7 @@ class RasaHandler:
     
     def getRasaResponse(self,query):
         data = '{"text": "'+query+'","message_id" : "b2831e73-1407-4ba0-a861-0f30a42a2a5a"}'
-        result = requests.post('http://localhost:5005/model/parse',data=data)
+        result = requests.post('http://34.125.34.68:5005/model/parse',data=data)
         j = result.json()
         resIntent = j['intent']['name']
         resConfience = j['intent']['confidence']

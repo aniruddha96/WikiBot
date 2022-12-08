@@ -20,10 +20,11 @@ def search():
     searchEducation = args.get("education", default=0, type=int)
     searchAll = args.get("all", default=0, type=int)
 
-    finalResponse = 'Sorry, I do not have an answer to this question.'
-    #rasaResponse = rasa.getRasaResponse(query)
-    #if  rasaResponse!= None:
-    #    return rasaResponse
+    finalResponse = 'Sorry, I do not have an answer to this question. I will learn soon hopefully.'
+    
+    rasaResponse = rasa.getRasaResponse(query)
+    if  rasaResponse!= None:
+       return rasaResponse
 
     if(cc.isChitChat(query)):
         chitChatResponse = cc.getChitChatResponse(query)

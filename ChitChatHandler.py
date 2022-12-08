@@ -40,7 +40,7 @@ class ChitChatHandler:
                 response = doc['response']
 
         print('query : '+query)
-        print('Just Solr match : '+ result.json()['response']['docs'][0]['input'])
+        # print('Just Solr match : '+ result.json()['response']['docs'][0]['input'])
         print('Embedding match : '+ matchedBest)
         print('Response : '+response)
         return response
@@ -50,7 +50,7 @@ class ChitChatHandler:
 
     def isChitChat(self,query):
         prediction = self.loaded_model.predict([query])
-        if prediction <= 0.3:
+        if prediction <= 0.2:
             return True
         return False
 

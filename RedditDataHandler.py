@@ -56,7 +56,13 @@ class RedditDataHandler:
         q_link = self.query_formation(query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll)
         result = requests.get(q_link)
         print(q_link)
-        topResult = self.nlpFilter(result,query)
+
+        res_json = result.json()
+        doc_list = res_json['response']['docs']
+        doc_list = [doc for doc in doc_list if not (doc['body'].__contains__('submission has been removed for the following reason'))]
+        res_json['response']['docs'] = doc_list
+
+        topResult = self.nlpFilter(res_json,query)
         
         return self.getMostUpVotedResponse(topResult)
     
@@ -98,7 +104,7 @@ class RedditDataHandler:
                 return alpha*a.solrScore + beta*a.embScore
         
             mat = list(res.values())
-            mat.sort(key=comparator)
+            mat.sort(key=comparator, reverse=True)
         
             return mat[0]
         

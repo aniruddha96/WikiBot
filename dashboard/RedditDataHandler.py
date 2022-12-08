@@ -35,8 +35,9 @@ class RedditDataHandler:
         return filter_query
 
     def query_formation(self,query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll):
+        query = urllib3.quote(query)
         if searchAll:
-            q_link = f'http://34.125.52.100:8983/solr/{core}/select?defType=edismax&df=parent_body&facet.field=topic&facet=true&fl=*%2Cscore&indent=true&q.op=OR&q={query}'
+            q_link = f'http://34.125.52.100:8983/solr/{core}/select?defType=edismax&df=parent_body&facet.field=topic&facet=true&fl=*%2Cscore&indent=true&q.op=OR&q={query}&rows=20&start=0'
         else:
             filter_query = ''
             filter_query = self.fq_formation(searchPolitics,'Politics',filter_query)
@@ -44,10 +45,9 @@ class RedditDataHandler:
             filter_query = self.fq_formation(searchTechnology,'Technology',filter_query)
             filter_query = self.fq_formation(searchHealthcare,'Healthcare',filter_query)
             filter_query = self.fq_formation(searchEducation,'Education',filter_query)
-            query = urllib3.quote(query)
             filter_query = urllib3.quote(filter_query)
 
-            q_link = f'http://34.125.52.100:8983/solr/{core}/select?defType=edismax&df=parent_body&facet.field=topic&facet=true&fl=*%2Cscore&fq={filter_query}&indent=true&q.op=OR&q={query}'
+            q_link = f'http://34.125.52.100:8983/solr/{core}/select?defType=edismax&df=parent_body&facet.field=topic&facet=true&fl=*%2Cscore&fq={filter_query}&indent=true&q.op=OR&q={query}&rows=20&start=0'
         return q_link
         
     def getResponse(self,query,core,searchPolitics,searchEnvironment,searchTechnology,searchHealthcare,searchEducation,searchAll):
@@ -71,7 +71,7 @@ class RedditDataHandler:
         
         return res
         
-    def nlpFilter(self,result,query):
+    def nlpFilter(self,result,query,alpha,beta):
         qembeddings = self.model.encode(query, convert_to_tensor=True)
         res = {}
         for doc in result.json()['response']['docs']:
@@ -92,9 +92,6 @@ class RedditDataHandler:
                 res[inp]=match
         
         def getBestMatchResponse(alpha,beta):
-            alpha = 1
-            beta = 2
-
             def comparator(a):
                 return alpha*a.solrScore + beta*a.embScore
         
@@ -104,7 +101,7 @@ class RedditDataHandler:
             return mat[0]
         
         
-        return getBestMatchResponse(1,1)
+        return getBestMatchResponse(alpha,beta)
     
     
     def getMatchesList(self,result,query):

@@ -51,7 +51,7 @@ def renderBarGraph(res,query):
 
 
 def renderResponsesBarGraph(res,query):
-    topResponse=  redd.nlpFilter(res,query)
+    topResponse=  redd.nlpFilter(res,query,alpha,beta)
     st.write("Top matched string is : "+topResponse.text)
     df = matchToDF(topResponse)
 
